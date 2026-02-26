@@ -19,6 +19,6 @@ export default async function decorate(block) {
       <p class="condition">${data.weather.description}</p>
     </div>
   `;
-  
+
   block.innerHTML = weatherHTML;
 }
