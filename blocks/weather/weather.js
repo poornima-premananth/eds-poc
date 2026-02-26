@@ -16,7 +16,7 @@ export default async function decorate(block) {
       <h3>${data.name}</h3>
       <img src="https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png" alt="${data.weather[0].main}" />
       <p class="temp">${data.main.temp}°C</p>
-      <p class="condition">${data.weather.description}</p>
+      <p class="condition">${data.weather[0].description}</p>
     </div>
   `;
 
