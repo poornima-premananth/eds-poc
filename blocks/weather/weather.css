@@ -1,0 +1,12 @@
+/* /blocks/weather/weather.css */
+.weather-card {
+  padding: 20px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+.weather-card .temp {
+  font-size: 2em;
+  font-weight: bold;
+}
