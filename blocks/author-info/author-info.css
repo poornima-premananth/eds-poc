@@ -1,0 +1,26 @@
+.author-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 40px 0;
+    padding: 20px;
+    border-radius: 12px;
+    background: #f5f8ff;
+  }
+  
+  .author-card img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .author-details h4 {
+    margin: 0;
+    color: #1f3c88;
+  }
+  
+  .author-details p {
+    margin: 4px 0;
+    font-size: 14px;
+  }
