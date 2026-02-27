@@ -1,6 +1,6 @@
 export default function decorate(block) {
-  const slides = [...block.children];
-  if (slides.length <= 1) return;
+  const originalSlides = [...block.children];
+  if (originalSlides.length <= 1) return;
 
   const viewport = document.createElement('div');
   viewport.className = 'carousel-viewport';
@@ -8,53 +8,70 @@ export default function decorate(block) {
   const track = document.createElement('div');
   track.className = 'carousel-track';
 
-  slides.forEach((slide, i) => {
-  slide.classList.add('carousel-slide');
+  /* ----------------------------
+     Prepare Slides (overlay logic)
+  ----------------------------- */
 
-  const imageWrapper = slide.children[0];
-  const contentWrapper = slide.children[1];
+  originalSlides.forEach((slide) => {
+    slide.classList.add('carousel-slide');
 
-  if (contentWrapper) {
-    const overlay = document.createElement('div');
-    overlay.className = 'carousel-overlay';
+    const imageWrapper = slide.children[0];
+    const contentWrapper = slide.children[1];
 
-    // Detect alignment instruction
-    let alignment = 'left'; // default
+    if (contentWrapper) {
+      const overlay = document.createElement('div');
+      overlay.className = 'carousel-overlay';
 
-    const firstChild = contentWrapper.querySelector('p');
-    if (firstChild) {
-      const text = firstChild.textContent.trim().toLowerCase();
+      // Alignment detection
+      let alignment = 'left';
+      const firstParagraph = contentWrapper.querySelector('p');
 
-      if (text === 'align-center') alignment = 'center';
-      if (text === 'align-right') alignment = 'right';
-      if (text === 'align-left') alignment = 'left';
+      if (firstParagraph) {
+        const text = firstParagraph.textContent.trim().toLowerCase();
+        if (text === 'align-center') alignment = 'center';
+        if (text === 'align-right') alignment = 'right';
+        if (text === 'align-left') alignment = 'left';
 
-      if (text.startsWith('align-')) {
-        firstChild.remove(); // remove instruction from UI
+        if (text.startsWith('align-')) {
+          firstParagraph.remove();
+        }
       }
+
+      overlay.classList.add(`overlay-${alignment}`);
+      overlay.append(...contentWrapper.childNodes);
+
+      // Convert links to buttons
+      overlay.querySelectorAll('a').forEach((link) => {
+        link.classList.add('carousel-button');
+      });
+
+      slide.appendChild(overlay);
+      contentWrapper.remove();
     }
-
-    overlay.classList.add(`overlay-${alignment}`);
-
-    overlay.append(...contentWrapper.childNodes);
-
-    // Convert links to buttons
-    overlay.querySelectorAll('a').forEach((link) => {
-      link.classList.add('carousel-button');
-    });
-
-    slide.appendChild(overlay);
-    contentWrapper.remove();
-  }
-
-  track.appendChild(slide);
   });
 
-  viewport.appendChild(track);
-  block.textContent = '';
-  block.appendChild(viewport);
+  /* ----------------------------
+     Infinite Loop Setup
+  ----------------------------- */
 
-  // Navigation
+  const firstClone = originalSlides[0].cloneNode(true);
+  const lastClone = originalSlides[originalSlides.length - 1].cloneNode(true);
+
+  firstClone.classList.add('clone');
+  lastClone.classList.add('clone');
+
+  track.append(lastClone);
+  originalSlides.forEach((slide) => track.append(slide));
+  track.append(firstClone);
+
+  viewport.append(track);
+  block.textContent = '';
+  block.append(viewport);
+
+  /* ----------------------------
+     Navigation
+  ----------------------------- */
+
   const prevBtn = document.createElement('button');
   prevBtn.className = 'carousel-nav prev';
   prevBtn.innerHTML = '&#10094;';
@@ -65,18 +82,40 @@ export default function decorate(block) {
 
   block.append(prevBtn, nextBtn);
 
-  let currentIndex = 0;
+  let currentIndex = 1;
+  const totalSlides = originalSlides.length;
 
-  function goToSlide(index) {
-    currentIndex = index;
-    track.style.transform = `translateX(-${index * 100}%)`;
+  function setPosition(withTransition = true) {
+    track.style.transition = withTransition
+      ? 'transform 0.6s ease'
+      : 'none';
+
+    track.style.transform = `translateX(-${currentIndex * 100}%)`;
   }
 
-  prevBtn.addEventListener('click', () => {
-    goToSlide((currentIndex - 1 + slides.length) % slides.length);
-  });
+  setPosition(false);
 
   nextBtn.addEventListener('click', () => {
-    goToSlide((currentIndex + 1) % slides.length);
+    if (currentIndex >= totalSlides + 1) return;
+    currentIndex++;
+    setPosition();
+  });
+
+  prevBtn.addEventListener('click', () => {
+    if (currentIndex <= 0) return;
+    currentIndex--;
+    setPosition();
+  });
+
+  track.addEventListener('transitionend', () => {
+    if (currentIndex === totalSlides + 1) {
+      currentIndex = 1;
+      setPosition(false);
+    }
+
+    if (currentIndex === 0) {
+      currentIndex = totalSlides;
+      setPosition(false);
+    }
   });
 }
