@@ -1,0 +1,53 @@
+.cta-banner {
+    margin: 60px 0;
+  }
+  
+  .cta-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40px;
+    border-radius: 16px;
+    color: white;
+    flex-wrap: wrap;
+  }
+  
+  /* Primary Theme (Pharma Blue) */
+  .cta-container.primary {
+    background: linear-gradient(135deg, #1f3c88, #2952a3);
+  }
+  
+  /* Secondary Theme */
+  .cta-container.secondary {
+    background: linear-gradient(135deg, #2e7d32, #4caf50);
+  }
+  
+  .cta-content h2 {
+    margin: 0;
+    font-size: 28px;
+  }
+  
+  .cta-content p {
+    margin-top: 8px;
+    font-size: 16px;
+    opacity: 0.9;
+  }
+  
+  .cta-action {
+    margin-top: 20px;
+  }
+  
+  .cta-button {
+    background: white;
+    color: #1f3c88;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s ease;
+  }
+  
+  .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+  }
