@@ -35,6 +35,6 @@ export default async function decorate(block) {
     block.innerHTML = weatherHTML;
   } catch (error) {
     block.textContent = 'Failed to fetch weather data.';
-    console.error(error);
+    console.log(error);
   }
 }
