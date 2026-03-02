@@ -1,0 +1,48 @@
+/* Core Layout */
+.tabs.block {
+  margin: 2rem 0;
+}
+
+.tabs .tab-nav {
+  display: flex;
+  flex-wrap: wrap;
+  border-bottom: 2px solid #ddd;
+  margin-bottom: 1rem;
+  gap: 0.5rem;
+}
+
+.tabs .tab-button {
+  background: transparent;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  border-bottom: 3px solid transparent;
+  transition: color 0.3s ease, border-color 0.3s ease;
+  color: #666;
+}
+
+.tabs .tab-button.active {
+  border-bottom: 3px solid #0078d4;
+  color: #0078d4;
+}
+
+/* Panel Logic */
+.tabs .tab-panel {
+  display: block; /* Show by default when active */
+}
+
+.tabs .tab-panel.hidden {
+  display: none !important; /* Force hide when class is present */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tabs .tab-nav {
+    flex-direction: column;
+  }
+  .tabs .tab-button {
+    width: 100%;
+    text-align: left;
+  }
+}
