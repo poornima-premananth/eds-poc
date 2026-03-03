@@ -1,8 +1,30 @@
+// /blocks/weather/weather.js
+
 export default async function decorate(block) {
-  // 1. Get ONLY the location (ignoring the 'weather' header if it's there)
-  // We look for the second row or just the last bit of text
-  const location = block.textContent.replace('weather', '').trim();
-  
+  // Try to derive location in a way that works for both
+  // document authoring tables and Universal Editor.
+  let location = '';
+
+  const rows = [...block.querySelectorAll(':scope > div')];
+
+  if (rows.length) {
+    const firstRowText = rows[0].textContent.trim();
+
+    // Case 1: Franklin table with header "weather" in first row
+    // and city in second row.
+    if (/^weather$/i.test(firstRowText) && rows[1]) {
+      location = rows[1].textContent.trim();
+    } else if (firstRowText) {
+      // Case 2: UE / simple authoring where first row is just the city.
+      location = firstRowText;
+    }
+  }
+
+  // Fallback: use all text content minus a possible "weather" header.
+  if (!location) {
+    location = block.textContent.replace(/weather/i, '').trim();
+  }
+
   if (!location) {
     block.textContent = 'No location provided';
     return;
@@ -12,17 +34,14 @@ export default async function decorate(block) {
 
   try {
     const API_KEY = '2125a904ab51be804fb3d9d6bef5f6a8';
-    const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?appid=${API_KEY}&q=${location}&units=metric`);
+    const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?appid=${API_KEY}&q=${encodeURIComponent(location)}&units=metric`);
     const data = await response.json();
 
-    // CHECK: If API returned an error (e.g. 404 City Not Found)
     if (data.cod !== 200) {
       block.textContent = `Weather error: ${data.message}`;
       return;
     }
 
-    // 3. Create HTML structure
-    // We use safe access to data.weather[0] now that we know data.cod is 200
     const weatherHTML = `
       <div class="weather-card">
         <h3>${data.name}</h3>
@@ -35,6 +54,7 @@ export default async function decorate(block) {
     block.innerHTML = weatherHTML;
   } catch (error) {
     block.textContent = 'Failed to fetch weather data.';
+    // eslint-disable-next-line no-console
     console.log(error);
   }
 }
