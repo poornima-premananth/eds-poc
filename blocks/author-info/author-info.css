@@ -1,4 +1,4 @@
-.author-card {
+  .author-info .author-card {
     display: flex;
     align-items: center;
     gap: 16px;
@@ -8,19 +8,21 @@
     background: #f5f8ff;
   }
   
-  .author-card img {
+  .author-info .author-image picture,
+  .author-info .author-image img {
     width: 70px;
     height: 70px;
     border-radius: 50%;
     object-fit: cover;
+    display: block;
   }
   
-  .author-details h4 {
+  .author-info .author-details h4 {
     margin: 0;
     color: #1f3c88;
   }
   
-  .author-details p {
+  .author-info .author-details p {
     margin: 4px 0;
     font-size: 14px;
   }
