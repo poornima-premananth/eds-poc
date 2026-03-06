@@ -33,8 +33,8 @@ export default async function decorate(block) {
   block.textContent = 'Loading weather...';
 
   try {
-    const API_KEY = '2125a904ab51be804fb3d9d6bef5f6a8';
-    const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?appid=${API_KEY}&q=${encodeURIComponent(location)}&units=metric`);
+    const endpoint = 'https://43992-edsintegrationapi-stage.adobeioruntime.net/api/v1/web/eds-api-mcp-server/weather';
+    const response = await fetch(`${endpoint}?location=${encodeURIComponent(location)}`);
     const data = await response.json();
 
     if (data.cod !== 200) {
