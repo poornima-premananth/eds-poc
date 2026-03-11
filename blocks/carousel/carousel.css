@@ -97,6 +97,37 @@
 }
 
 /* =========================
+   Overlay cells (preserve UE bindings)
+========================= */
+
+/* Hidden cells: keep in DOM for UE, hide visually */
+.carousel-overlay .carousel-alignment,
+.carousel-overlay .carousel-button-style,
+.carousel-overlay .carousel-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.carousel-overlay .carousel-title {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.carousel-overlay .carousel-desc {
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
+}
+
+/* =========================
    Typography
 ========================= */
 
@@ -117,21 +148,23 @@
    Button Styling
 ========================= */
 
-.carousel-button {
+/* Higher specificity than styles.css a.button:any-link (0,2,1) */
+.carousel .carousel-overlay .carousel-button {
   display: inline-block;
   margin-top: 1.8rem;
   padding: 0.85rem 2rem;
   background-color: #C7C6C1;
   color: #000 !important;
-  text-decoration: none;
+  text-decoration: none !important;
   font-weight: 600;
   border-radius: 4px;
   transition: all 0.3s ease;
 }
 
-.carousel-button:hover {
+.carousel .carousel-overlay .carousel-button:hover {
   background-color: #000;
   color: #fff !important;
+  text-decoration: none !important;
 }
 
 .carousel-overlay a {

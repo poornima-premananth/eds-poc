@@ -12,41 +12,61 @@ export default function decorate(block) {
      Prepare Slides (overlay logic)
   ----------------------------- */
 
+  const getCellText = (el) => (el?.textContent?.trim() ?? '');
+  const applyButtonClass = (linkCell, label) => {
+    const a = linkCell?.querySelector('a');
+    if (a) {
+      a.classList.add('carousel-button');
+      a.textContent = label || a.textContent || 'CTA Button';
+    }
+  };
+
   originalSlides.forEach((slide) => {
     slide.classList.add('carousel-slide');
 
-    const imageWrapper = slide.children[0];
-    const contentWrapper = slide.children[1];
+    const cells = [...slide.children];
+    const alignmentCell = cells[1];
+    const titleCell = cells[2];
+    const descCell = cells[3];
+    const buttonLabelCell = cells[4];
+    const buttonLinkCell = cells[5];
+    const styleCell = cells[6];
 
-    if (contentWrapper) {
+    const alignmentRaw = getCellText(alignmentCell).toLowerCase();
+    let alignment = 'left';
+    if (alignmentRaw === 'center') alignment = 'center';
+    else if (alignmentRaw === 'right') alignment = 'right';
+
+    const title = getCellText(titleCell);
+    const description = getCellText(descCell);
+    const buttonLabel = getCellText(buttonLabelCell);
+    const hasLink = buttonLinkCell?.querySelector('a') || getCellText(buttonLinkCell);
+    const hasDetails = !!(title || description || buttonLabel || hasLink);
+
+    if (hasDetails) {
       const overlay = document.createElement('div');
-      overlay.className = 'carousel-overlay';
+      overlay.className = `carousel-overlay overlay-${alignment}`;
 
-      // Alignment detection
-      let alignment = 'left';
-      const firstParagraph = contentWrapper.querySelector('p');
-
-      if (firstParagraph) {
-        const text = firstParagraph.textContent.trim().toLowerCase();
-        if (text === 'align-center') alignment = 'center';
-        if (text === 'align-right') alignment = 'right';
-        if (text === 'align-left') alignment = 'left';
-
-        if (text.startsWith('align-')) {
-          firstParagraph.remove();
+      [alignmentCell, titleCell, descCell, buttonLabelCell, buttonLinkCell, styleCell].forEach((c) => {
+        if (c?.parentNode) {
+          c.classList.add('carousel-overlay-cell');
+          if (c === alignmentCell) c.classList.add('carousel-alignment');
+          if (c === titleCell) c.classList.add('carousel-title');
+          if (c === descCell) c.classList.add('carousel-desc');
+          if (c === buttonLabelCell) c.classList.add('carousel-label');
+          if (c === buttonLinkCell) {
+            c.classList.add('carousel-link');
+            applyButtonClass(c, buttonLabel);
+          }
+          if (c === styleCell) c.classList.add('carousel-button-style');
+          overlay.appendChild(c);
         }
-      }
-
-      overlay.classList.add(`overlay-${alignment}`);
-      overlay.append(...contentWrapper.childNodes);
-
-      // Convert links to buttons
-      overlay.querySelectorAll('a').forEach((link) => {
-        link.classList.add('carousel-button');
       });
-
       slide.appendChild(overlay);
-      contentWrapper.remove();
+    } else {
+      [alignmentCell, titleCell, descCell, buttonLabelCell, buttonLinkCell, styleCell].forEach((c) => {
+        if (c?.parentNode) c.remove();
+      });
     }
   });
 
@@ -54,11 +74,24 @@ export default function decorate(block) {
      Infinite Loop Setup
   ----------------------------- */
 
+  const stripEditorAttrs = (el) => {
+    const nodes = [el, ...el.querySelectorAll('*')];
+    nodes.forEach((node) => {
+      [...node.attributes].forEach((attr) => {
+        if (attr.name.startsWith('data-aue-') || attr.name.startsWith('data-richtext-')) {
+          node.removeAttribute(attr.name);
+        }
+      });
+    });
+  };
+
   const firstClone = originalSlides[0].cloneNode(true);
   const lastClone = originalSlides[originalSlides.length - 1].cloneNode(true);
 
-  firstClone.classList.add('clone');
-  lastClone.classList.add('clone');
+  [firstClone, lastClone].forEach((clone) => {
+    clone.classList.add('clone');
+    stripEditorAttrs(clone);
+  });
 
   track.append(lastClone);
   originalSlides.forEach((slide) => track.append(slide));
