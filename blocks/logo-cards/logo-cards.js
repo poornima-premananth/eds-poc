@@ -2,11 +2,9 @@ import { createOptimizedPicture } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
 
 export default function decorate(block) {
-  let rows = [...block.children];
+  const rows = [...block.querySelectorAll(':scope > div')];
 
-  if (rows.length === 1) {
-    rows = [...rows[0].children];
-  }
+  const ul = document.createElement('ul');
 
   rows.forEach((row) => {
     const li = document.createElement('li');
