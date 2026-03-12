@@ -120,7 +120,7 @@ function decorateButtons(main) {
 // eslint-disable-next-line import/prefer-default-export
 export function decorateMain(main) {
   decorateIcons(main);
-  buildAutoBlocks(main);
+  //buildAutoBlocks(main);
   decorateSections(main);
   decorateBlocks(main);
   decorateButtons(main);
