@@ -63,3 +63,26 @@
   color: var(--dark-color);
   text-decoration: none;
 }
+
+footer .columns a:any-link,
+footer .footer .columns a:any-link {
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  margin: 0;
+  background-color: transparent;
+  font-weight: normal;
+  display: inline;
+  text-decoration: none;
+  color: var(--text-color);
+}
+
+footer .columns a:hover,
+footer .columns a:focus-visible,
+footer .footer .columns a:hover,
+footer .footer .columns a:focus-visible {
+  border: none;
+  background-color: transparent;
+  color: var(--text-color);
+  text-decoration: underline;
+}
