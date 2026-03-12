@@ -1,0 +1,206 @@
+/* =========================
+   Accordion Container
+========================= */
+
+.accordion {
+  width: 100%;
+  margin: 2rem 0;
+}
+
+/* =========================
+   Accordion Item
+========================= */
+
+.accordion-item {
+  overflow: hidden;
+}
+
+/* =========================
+   Accordion Header (Button)
+========================= */
+
+.accordion-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  background-color: #d6ecff;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--heading-font-family, inherit);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-color, #333);
+  transition: background-color 0.2s ease, color 0.2s ease;
+  position: relative;
+}
+
+/* Change to lighter color on hover */
+.accordion-header:hover {
+  background-color: #e8f4ff;
+}
+
+/* Ensure closed accordions always keep light blue background */
+.accordion-item:not(.is-open) .accordion-header {
+  background-color: #d6ecff !important;
+}
+
+.accordion-item:not(.is-open) .accordion-header:hover {
+  background-color: #e8f4ff !important;
+}
+
+.accordion-item:not(.is-open) .accordion-header:focus {
+  background-color: #d6ecff !important;
+}
+
+.accordion-item:not(.is-open) .accordion-header:active {
+  background-color: #d6ecff !important;
+}
+
+.accordion-header:focus {
+  outline: 2px solid var(--link-color, #0066cc);
+  outline-offset: -2px;
+}
+
+.accordion-header:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Opened accordion styling */
+.accordion-item.is-open .accordion-header {
+  color: var(--text-color, #333);
+}
+
+/* =========================
+   Accordion Icon
+========================= */
+
+.accordion-icon {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-left: 1rem;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.accordion-icon::before,
+.accordion-icon::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background-color: var(--text-color, #333);
+  transition: background-color 0.2s ease;
+}
+
+.accordion-icon::before {
+  width: 12px;
+  height: 2px;
+  transform: translate(-50%, -50%);
+}
+
+.accordion-icon::after {
+  width: 2px;
+  height: 12px;
+  transform: translate(-50%, -50%);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.accordion-item.is-open .accordion-icon::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+  opacity: 0;
+}
+
+/* Icon color remains default for closed accordions */
+
+/* =========================
+   Accordion Content
+========================= */
+
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  padding: 0 1.5rem;
+}
+
+.accordion-item.is-open .accordion-content {
+  padding-bottom: 1.5rem;
+  padding-top: 0.5rem;
+}
+
+.accordion-content > * {
+  margin: 0.75rem 0;
+}
+
+.accordion-content > *:first-child {
+  margin-top: 0;
+}
+
+.accordion-content > *:last-child {
+  margin-bottom: 0;
+}
+
+/* =========================
+   Content Styling
+========================= */
+
+.accordion-content h4 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.accordion-content h4:first-child {
+  margin-top: 0;
+}
+
+.accordion-content ul {
+  margin: 0.75rem 0;
+  padding-left: 1.5rem;
+}
+
+.accordion-content li {
+  margin: 0.5rem 0;
+  line-height: 1.6;
+}
+
+.accordion-content strong {
+  font-weight: 600;
+}
+
+/* =========================
+   Responsive Design
+========================= */
+
+@media (width >= 768px) {
+  .accordion-header {
+    padding: 1.5rem 2rem;
+    font-size: 1.25rem;
+  }
+
+  .accordion-content {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  .accordion-item.is-open .accordion-content {
+    padding-bottom: 2rem;
+  }
+}
+
+/* =========================
+   Reduced Motion
+========================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .accordion-content,
+  .accordion-icon,
+  .accordion-icon::after {
+    transition: none;
+  }
+}
