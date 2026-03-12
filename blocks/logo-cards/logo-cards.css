@@ -1,0 +1,67 @@
+.logo-cards > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+.logo-cards > ul > li {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px 24px;
+  border: 1px solid #10b4a2;
+  background-color: var(--background-color, #fff);
+}
+
+.logo-card-icon {
+  flex: 0 0 auto;
+  line-height: 0;
+}
+
+.logo-card-icon picture,
+.logo-card-icon img {
+  display: block;
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.logo-card-content {
+  flex: 1 1 auto;
+}
+
+.logo-card-title {
+  margin: 0 0 4px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.logo-card-description {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-color, #444);
+}
+
+.logo-card-cta {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--link-color, #10b4a2);
+  text-decoration: none;
+}
+
+.logo-card-cta:hover,
+.logo-card-cta:focus {
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .logo-cards > ul > li {
+    padding: 16px 18px;
+  }
+}
+
