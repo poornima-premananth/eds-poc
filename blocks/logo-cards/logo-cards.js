@@ -1,21 +1,22 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
-import { moveInstrumentation } from '../../scripts/scripts.js';
+// Removed the broken moveInstrumentation import
 
 export default function decorate(block) {
   const rows = [...block.querySelectorAll(':scope > div')];
-
   const ul = document.createElement('ul');
 
   rows.forEach((row) => {
     const li = document.createElement('li');
-    moveInstrumentation(row, li);
+    // Note: moveInstrumentation(row, li) removed to prevent crashes
 
     const cells = [...row.children];
 
-    const iconCell = cells[0] || null;
-    const titleCell = cells[1] || null;
-    const descriptionCell = cells[2] || null;
-    const ctaCell = cells[3] || null;
+    // Find cells based on content rather than strict index
+    const iconCell = cells.find((c) => c.querySelector('picture, img'));
+    const contentCell = cells.find((c) => c.textContent.trim() && !c.querySelector('picture, img'));
+    // The description is usually the next div with text
+    const descriptionCell = cells.filter((c) => c.textContent.trim() && !c.querySelector('picture, img'))[1];
+    const ctaCell = cells.find((c) => c.querySelector('a'));
 
     let iconWrapper = null;
     if (iconCell) {
@@ -25,15 +26,9 @@ export default function decorate(block) {
           rawImg.src,
           rawImg.alt || '',
           false,
-          [{ width: '64' }],
+          [{ width: '80' }],
         );
-        const optimizedImg = optimized.querySelector('img');
-        if (optimizedImg) {
-          moveInstrumentation(rawImg, optimizedImg);
-        }
-        const pictureOrImg = rawImg.closest('picture') || rawImg;
-        pictureOrImg.replaceWith(optimized);
-
+        
         iconWrapper = document.createElement('div');
         iconWrapper.className = 'logo-card-icon';
         iconWrapper.append(optimized);
@@ -43,37 +38,32 @@ export default function decorate(block) {
     const content = document.createElement('div');
     content.className = 'logo-card-content';
 
-    const titleText = titleCell ? titleCell.textContent.trim() : '';
-    if (titleText) {
+    if (contentCell) {
       const titleEl = document.createElement('h3');
       titleEl.className = 'logo-card-title';
-      titleEl.textContent = titleText;
+      titleEl.textContent = contentCell.textContent.trim();
       content.appendChild(titleEl);
     }
 
-    const descriptionText = descriptionCell ? descriptionCell.textContent.trim() : '';
-    if (descriptionText) {
+    if (descriptionCell) {
       const descEl = document.createElement('p');
       descEl.className = 'logo-card-description';
-      descEl.textContent = descriptionText;
+      descEl.textContent = descriptionCell.textContent.trim();
       content.appendChild(descEl);
     }
 
     if (ctaCell) {
       const link = ctaCell.querySelector('a');
-      if (link && link.href) {
+      if (link) {
         const ctaEl = document.createElement('a');
         ctaEl.className = 'logo-card-cta';
         ctaEl.href = link.href;
-        ctaEl.textContent = (link.textContent || '').trim() || link.href;
+        ctaEl.textContent = link.textContent;
         content.appendChild(ctaEl);
       }
     }
 
-    if (iconWrapper) {
-      li.appendChild(iconWrapper);
-    }
-
+    if (iconWrapper) li.appendChild(iconWrapper);
     li.appendChild(content);
     ul.appendChild(li);
   });
